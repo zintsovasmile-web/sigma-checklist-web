@@ -55,7 +55,7 @@ function findRow_(sh, nickname) {
 
 function doPost(e) {
   try {
-    const data = JSON.parse((e.postData && e.postData.contents) || '{}');
+    const data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     return saveChecklist_(data);
   } catch (err) {
     return json_({ok:false, error:String(err && err.message || err)});
@@ -63,7 +63,7 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  const params = e.parameter || {};
+  const params = (e && e.parameter) || {};
   const callback = String(params.callback || '').replace(/[^a-zA-Z0-9_.$]/g, '');
   let payload;
 
