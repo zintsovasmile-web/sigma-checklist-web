@@ -86,7 +86,12 @@ function doGet(e) {
 }
 
 function saveChecklist_(data, asObject) {
+  const lock = LockService.getScriptLock();
+  let hasLock = false;
   try {
+    hasLock = lock.tryLock(10000);
+    if (!hasLock) throw new Error('save is busy, try again');
+
     const nickname = String(data.nickname || '').trim();
     if (!nickname) throw new Error('nickname is required');
 
@@ -114,6 +119,8 @@ function saveChecklist_(data, asObject) {
   } catch (err) {
     const result = {ok:false, error:String(err && err.message || err)};
     return asObject ? result : json_(result);
+  } finally {
+    if (hasLock) lock.releaseLock();
   }
 }
 
