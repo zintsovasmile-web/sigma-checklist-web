@@ -119,10 +119,10 @@
     }
 
     /* CHECKLIST */
-    #checklistScreen{background:#fff;padding:0 0 60px}
+    #checklistScreen{background:#fff;padding:0;height:100vh;overflow:hidden}
     .topbar{
-      min-height:106px;background:var(--purple);color:white;display:flex;align-items:center;justify-content:space-between;
-      padding:22px max(28px,calc((100vw - 1160px)/2));position:relative;overflow:hidden;
+      min-height:78px;background:var(--purple);color:white;display:flex;align-items:center;justify-content:space-between;
+      padding:14px max(24px,calc((100vw - 1180px)/2));position:relative;overflow:hidden;
     }
     .topbar::after{content:"";position:absolute;right:-70px;bottom:-90px;width:340px;height:170px;border:42px solid rgba(255,255,255,.08);border-left-color:transparent;transform:rotate(-4deg)}
     .topbar .brand{position:static}
@@ -132,38 +132,38 @@
     .save-status{font-size:12px;opacity:.78;margin-top:4px}
     .change-user{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.10);color:white;border-radius:12px;padding:9px 12px;font-weight:700;font-size:12px}
 
-    .content{width:min(1160px,calc(100% - 40px));margin:42px auto 0;position:relative;z-index:1}
-    .orange-rule{width:115px;height:9px;border-radius:0 999px 999px 0;background:var(--orange);margin-bottom:18px}
-    .title-row{display:grid;grid-template-columns:1fr auto;align-items:end;gap:24px}
-    .page-title{font-size:clamp(28px,4vw,45px);line-height:1.12;letter-spacing:-.035em}
-    .page-subtitle{margin:12px 0 0;color:var(--muted);font-size:16px;line-height:1.5}
-    .progress-pill{background:var(--yellow);border-radius:999px;padding:14px 19px;font-family:"Unbounded";font-weight:800;white-space:nowrap;font-size:14px}
+    .content{width:min(1180px,calc(100% - 32px));margin:18px auto 0;position:relative;z-index:1}
+    .orange-rule{width:98px;height:7px;border-radius:0 999px 999px 0;background:var(--orange);margin-bottom:10px}
+    .title-row{display:grid;grid-template-columns:1fr auto;align-items:end;gap:18px}
+    .page-title{font-size:clamp(24px,3.2vw,38px);line-height:1.08;letter-spacing:-.035em}
+    .page-subtitle{margin:7px 0 0;color:var(--muted);font-size:14px;line-height:1.35}
+    .progress-pill{background:var(--yellow);border-radius:999px;padding:10px 15px;font-family:"Unbounded";font-weight:800;white-space:nowrap;font-size:13px}
 
-    .progress-wrap{margin:24px 0 30px;background:#EEEAF1;border-radius:999px;height:13px;overflow:hidden}
+    .progress-wrap{margin:13px 0 16px;background:#EEEAF1;border-radius:999px;height:10px;overflow:hidden}
     .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--green),#A4D72B);border-radius:inherit;transition:width .35s ease}
 
-    .layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:34px;align-items:start}
-    .list{display:grid;gap:12px}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:22px;align-items:start}
+    .list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
     .item{
-      display:grid;grid-template-columns:46px 1fr;gap:16px;align-items:center;
-      min-height:82px;padding:16px 20px;border:2px solid var(--line);border-radius:21px;background:white;
+      display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:center;
+      min-height:49px;padding:8px 12px;border:2px solid var(--line);border-radius:15px;background:white;
       transition:.18s ease;cursor:pointer;position:relative;overflow:hidden;
     }
     .item:hover{border-color:#D7CCD9;transform:translateY(-1px);box-shadow:0 9px 24px rgba(50,35,67,.07)}
     .item.checked{background:#F4FAE7;border-color:#CDE7A0}
     .item.checked::after{content:"";position:absolute;right:-21px;top:-26px;width:88px;height:88px;background:var(--green);border-radius:50%;opacity:.11}
-    .box{width:38px;height:38px;border:3px solid #B9B1BF;border-radius:10px;display:grid;place-items:center;background:#fff;transition:.18s}
-    .box svg{width:23px;height:23px;opacity:0;transform:scale(.55) rotate(-8deg);transition:.18s}
+    .box{width:30px;height:30px;border:3px solid #B9B1BF;border-radius:9px;display:grid;place-items:center;background:#fff;transition:.18s}
+    .box svg{width:19px;height:19px;opacity:0;transform:scale(.55) rotate(-8deg);transition:.18s}
     .item.checked .box{border-color:var(--green);background:var(--green)}
     .item.checked .box svg{opacity:1;transform:scale(1) rotate(0)}
-    .item-text{font-size:16px;line-height:1.45;font-weight:600}
+    .item-text{font-size:13px;line-height:1.24;font-weight:700}
 
-    .side{position:sticky;top:24px}
-    .bell-card{background:var(--purple);border-radius:28px;color:white;padding:23px 22px 0;overflow:hidden;position:relative;min-height:380px;box-shadow:var(--shadow)}
-    .bell-card::before{content:"";position:absolute;width:270px;height:270px;background:var(--green);border-radius:50%;right:-90px;bottom:-80px;opacity:.88}
-    .bell-card .bell-img{width:245px;display:block;margin:82px auto -2px;position:relative;z-index:2}
-    .speech{position:absolute;z-index:3;top:22px;left:20px;right:20px;background:white;color:var(--ink);padding:15px 16px;border-radius:17px 17px 17px 5px;font-weight:700;line-height:1.4;font-size:14px}
-    .ready-card{margin-top:14px;border-radius:21px;background:#F1F0F2;padding:18px 18px 19px;font-size:13px;line-height:1.45;color:#5D5662}
+    .side{position:sticky;top:14px}
+    .bell-card{background:var(--purple);border-radius:22px;color:white;padding:18px 17px 0;overflow:hidden;position:relative;min-height:300px;box-shadow:var(--shadow)}
+    .bell-card::before{content:"";position:absolute;width:220px;height:220px;background:var(--green);border-radius:50%;right:-78px;bottom:-70px;opacity:.88}
+    .bell-card .bell-img{width:195px;display:block;margin:76px auto -2px;position:relative;z-index:2}
+    .speech{position:absolute;z-index:3;top:16px;left:16px;right:16px;background:white;color:var(--ink);padding:12px 13px;border-radius:15px 15px 15px 5px;font-weight:700;line-height:1.32;font-size:13px}
+    .ready-card{margin-top:10px;border-radius:17px;background:#F1F0F2;padding:12px 14px 13px;font-size:12px;line-height:1.35;color:#5D5662}
     .ready-card strong{font-family:"Unbounded";font-size:13px;color:var(--ink)}
 
     .done-banner{
@@ -181,7 +181,8 @@
 
     @media(max-width:850px){
       .login-card{grid-template-columns:1fr;min-height:auto}.login-bell{min-height:300px}.login-main{padding:48px 34px 38px}.login-bell::before{width:245px;height:245px;top:34px}.bell-img{width:250px}.bell-note{top:24px}
-      .layout{grid-template-columns:1fr}.side{position:static}.bell-card{min-height:300px}.bell-card .bell-img{width:215px;margin:65px auto -5px}
+      #checklistScreen{height:auto;min-height:100vh;overflow:visible}
+      .layout{grid-template-columns:1fr}.list{grid-template-columns:1fr}.side{position:static}.bell-card{min-height:300px}.bell-card .bell-img{width:215px;margin:65px auto -5px}
       .title-row{grid-template-columns:1fr}.progress-pill{justify-self:start}.topbar{padding:20px}.topbar .brand-sub{display:none}
     }
     @media(max-width:560px){
@@ -367,8 +368,7 @@
       state.checks[i] = !state.checks[i];
       render();
       saveLocal();
-      scheduleServerSave();
-      saveStatus.textContent = 'Прогресс сохранён';
+      if(!scheduleServerSave()) saveStatus.textContent = 'Сохранено на этом устройстве';
     }
 
     listEl.addEventListener('click', e=>{
@@ -400,30 +400,44 @@
       nicknameInput.value='';nicknameInput.focus();currentNick='';
     });
 
+    function serverEnabled(){
+      return APPS_SCRIPT_URL.trim().length > 0;
+    }
+
     function scheduleServerSave(){
-      if(!APPS_SCRIPT_URL) return;
+      if(!serverEnabled()) return false;
       clearTimeout(saveTimer);
       saveStatus.textContent='Сохраняю…';
       saveTimer=setTimeout(saveRemote,450);
+      return true;
     }
-    async function saveRemote(){
-      if(!APPS_SCRIPT_URL || !currentNick) return;
-      const payload={nickname:currentNick,checks:state.checks,updatedAt:state.updatedAt};
-      try{
-        await fetch(APPS_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-        saveStatus.textContent='Прогресс сохранён';
-      }catch(e){saveStatus.textContent='Сохранено на этом устройстве';}
+    function requestRemote(params, timeoutMs=6000){
+      return new Promise(resolve=>{
+        const cb='sigmaCb_'+Date.now()+'_'+Math.floor(Math.random()*10000);
+        const script=document.createElement('script');
+        const cleanup=()=>{delete window[cb];script.remove();};
+        const timer=setTimeout(()=>{cleanup();resolve(null);},timeoutMs);
+        window[cb]=(resp)=>{clearTimeout(timer);cleanup();resolve(resp || null);};
+        script.onerror=()=>{clearTimeout(timer);cleanup();resolve(null);};
+        const query=new URLSearchParams({...params,callback:cb,_:Date.now()});
+        script.src=APPS_SCRIPT_URL+'?'+query.toString();
+        document.body.appendChild(script);
+      });
     }
 
-    function loadRemote(nick, local){
-      if(!APPS_SCRIPT_URL) {saveStatus.textContent='Сохранено на этом устройстве';return;}
-      const cb='sigmaCb_'+Date.now()+'_'+Math.floor(Math.random()*10000);
-      const script=document.createElement('script');
-      const cleanup=()=>{delete window[cb];script.remove();};
-      const timer=setTimeout(()=>{cleanup();saveStatus.textContent='Сохранено на этом устройстве';},5000);
-      window[cb]=(resp)=>{
-        clearTimeout(timer);
-        try{
+    async function saveRemote(){
+      if(!serverEnabled() || !currentNick) return;
+      const checksString=state.checks.map(Boolean).map(v=>v?'1':'0').join('');
+      const resp=await requestRemote({action:'save',nickname:currentNick,checks:checksString,updatedAt:state.updatedAt});
+      if(resp?.ok) saveStatus.textContent='Сохранено в таблицу';
+      else saveStatus.textContent='Не получилось сохранить в таблицу';
+    }
+
+    async function loadRemote(nick, local){
+      if(!serverEnabled()) {saveStatus.textContent='Таблица пока не подключена';return;}
+      const resp=await requestRemote({nickname:nick});
+      if(!resp){saveStatus.textContent='Таблица не ответила';return;}
+      try{
           if(resp?.found && resp.state){
             const remote=safeState(resp.state);
             const lt=local?.updatedAt ? Date.parse(local.updatedAt) : 0;
@@ -432,11 +446,7 @@
             else if(local && lt>rt){scheduleServerSave();}
           }
           saveStatus.textContent='Прогресс синхронизирован';
-        } finally {cleanup();}
-      };
-      script.onerror=()=>{clearTimeout(timer);cleanup();saveStatus.textContent='Сохранено на этом устройстве';};
-      script.src=APPS_SCRIPT_URL+'?nickname='+encodeURIComponent(nick)+'&callback='+encodeURIComponent(cb)+'&_='+Date.now();
-      document.body.appendChild(script);
+      }catch(e){saveStatus.textContent='Сохранено на этом устройстве';}
     }
 
     function fireConfetti(){
