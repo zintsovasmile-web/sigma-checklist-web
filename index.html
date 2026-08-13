@@ -371,7 +371,7 @@
       state.checks[i] = !state.checks[i];
       render();
       saveLocal();
-      if(!scheduleServerSave()) saveStatus.textContent = 'Сохранено на этом устройстве';
+      if(!scheduleServerSave()) saveStatus.textContent = 'Сохранено';
     }
 
     listEl.addEventListener('click', e=>{
@@ -392,6 +392,8 @@
       saveInFlight = false;
       loginScreen.classList.add('hidden'); checklistScreen.classList.remove('hidden');
       render();
+      saveLocal();
+      if(scheduleServerSave()) saveStatus.textContent='Отправляю имя в таблицу…';
       loadRemote(currentNick, local);
     }
 
@@ -413,7 +415,7 @@
     function scheduleServerSave(){
       if(!serverEnabled()) return false;
       clearTimeout(saveTimer);
-      saveStatus.textContent='Сохраняю…';
+      saveStatus.textContent='Отправляю в таблицу…';
       saveQueued = true;
       saveTimer=setTimeout(processSaveQueue,650);
       return true;
@@ -470,7 +472,7 @@
       if(!serverEnabled()) {saveStatus.textContent='Таблица пока не подключена';return;}
       const resp=await requestRemote({nickname:nick});
       if(nick !== currentNick) return;
-      if(!resp){saveStatus.textContent='Сохранено на этом устройстве';return;}
+      if(!resp) return;
       try{
           remoteLoaded = true;
           if(resp?.found && resp.state){
@@ -480,8 +482,8 @@
             if(rt>lt){state=remote;saveLocal();render();}
             else if(local && lt>rt){scheduleServerSave();}
           }
-          saveStatus.textContent='Прогресс синхронизирован';
-      }catch(e){saveStatus.textContent='Сохранено на этом устройстве';}
+          if(!saveQueued && !saveInFlight) saveStatus.textContent='Прогресс синхронизирован';
+      }catch(e){}
     }
 
     function fireConfetti(){
