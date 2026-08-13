@@ -322,6 +322,9 @@
     let currentNick = '';
     let state = { checks: Array(CHECKS.length).fill(false), updatedAt: null };
     let saveTimer = null;
+    let saveInFlight = false;
+    let saveQueued = false;
+    let remoteLoaded = false;
     let celebrated = false;
 
     function nickKey(nick){ return 'sigma-checklist:' + nick.trim().toLocaleLowerCase('ru-RU'); }
@@ -384,6 +387,9 @@
       helloEl.textContent = `Привет, ${currentNick}!`;
       const local = loadLocal(currentNick);
       state = local || {checks:Array(CHECKS.length).fill(false),updatedAt:null};
+      remoteLoaded = false;
+      saveQueued = false;
+      saveInFlight = false;
       loginScreen.classList.add('hidden'); checklistScreen.classList.remove('hidden');
       render();
       loadRemote(currentNick, local);
@@ -408,9 +414,19 @@
       if(!serverEnabled()) return false;
       clearTimeout(saveTimer);
       saveStatus.textContent='Сохраняю…';
-      saveTimer=setTimeout(saveRemote,450);
+      saveQueued = true;
+      saveTimer=setTimeout(processSaveQueue,650);
       return true;
     }
+
+    function snapshotPayload(){
+      return {
+        nickname: currentNick,
+        checks: state.checks.map(Boolean).map(v=>v?'1':'0').join(''),
+        updatedAt: state.updatedAt
+      };
+    }
+
     function requestRemote(params, timeoutMs=6000){
       return new Promise(resolve=>{
         const cb='sigmaCb_'+Date.now()+'_'+Math.floor(Math.random()*10000);
@@ -425,19 +441,61 @@
       });
     }
 
-    async function saveRemote(){
+    async function fallbackPost(payload){
+      try{
+        await fetch(APPS_SCRIPT_URL,{
+          method:'POST',
+          mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body:JSON.stringify({
+            nickname: payload.nickname,
+            checks: payload.checks.split('').map(value=>value==='1'),
+            updatedAt: payload.updatedAt
+          })
+        });
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
+
+    async function processSaveQueue(){
+      if(saveInFlight) return;
+      if(!saveQueued) return;
       if(!serverEnabled() || !currentNick) return;
-      const checksString=state.checks.map(Boolean).map(v=>v?'1':'0').join('');
-      const resp=await requestRemote({action:'save',nickname:currentNick,checks:checksString,updatedAt:state.updatedAt});
-      if(resp?.ok) saveStatus.textContent='Сохранено в таблицу';
-      else saveStatus.textContent='Не получилось сохранить в таблицу';
+      saveQueued = false;
+      saveInFlight = true;
+      const payload = snapshotPayload();
+      let saved = false;
+      for(let attempt=0; attempt<3 && !saved; attempt++){
+        const resp=await requestRemote({action:'save',...payload},7000);
+        saved = Boolean(resp?.ok);
+        if(!saved && attempt < 2){
+          saveStatus.textContent='Повторяю сохранение…';
+          await new Promise(resolve=>setTimeout(resolve,900));
+        }
+      }
+      if(!saved) saved = await fallbackPost(payload);
+      saveInFlight = false;
+      if(saveQueued){
+        saveStatus.textContent='Сохраняю свежие изменения…';
+        setTimeout(processSaveQueue,250);
+        return;
+      }
+      saveStatus.textContent = saved ? 'Сохранено в таблицу' : 'Не получилось сохранить. Попробую ещё раз…';
+      if(!saved){
+        saveQueued = true;
+        setTimeout(processSaveQueue,1800);
+      }
     }
 
     async function loadRemote(nick, local){
       if(!serverEnabled()) {saveStatus.textContent='Таблица пока не подключена';return;}
       const resp=await requestRemote({nickname:nick});
-      if(!resp){saveStatus.textContent='Таблица не ответила';return;}
+      if(nick !== currentNick) return;
+      if(!resp){saveStatus.textContent='Сохранено на этом устройстве';return;}
       try{
+          remoteLoaded = true;
           if(resp?.found && resp.state){
             const remote=safeState(resp.state);
             const lt=local?.updatedAt ? Date.parse(local.updatedAt) : 0;
