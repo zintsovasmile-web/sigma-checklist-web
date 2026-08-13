@@ -441,22 +441,11 @@
       });
     }
 
-    async function fallbackPost(payload){
-      try{
-        await fetch(APPS_SCRIPT_URL,{
-          method:'POST',
-          mode:'no-cors',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body:JSON.stringify({
-            nickname: payload.nickname,
-            checks: payload.checks.split('').map(value=>value==='1'),
-            updatedAt: payload.updatedAt
-          })
-        });
-        return true;
-      }catch(e){
-        return false;
-      }
+    function sendSaveBeacon(payload){
+      const img=new Image();
+      const query=new URLSearchParams({action:'save',...payload,_:Date.now()});
+      img.onload=img.onerror=()=>{};
+      img.src=APPS_SCRIPT_URL+'?'+query.toString();
     }
 
     async function processSaveQueue(){
@@ -466,27 +455,15 @@
       saveQueued = false;
       saveInFlight = true;
       const payload = snapshotPayload();
-      let saved = false;
-      for(let attempt=0; attempt<3 && !saved; attempt++){
-        const resp=await requestRemote({action:'save',...payload},7000);
-        saved = Boolean(resp?.ok);
-        if(!saved && attempt < 2){
-          saveStatus.textContent='Повторяю сохранение…';
-          await new Promise(resolve=>setTimeout(resolve,900));
-        }
-      }
-      if(!saved) saved = await fallbackPost(payload);
+      sendSaveBeacon(payload);
+      await new Promise(resolve=>setTimeout(resolve,850));
       saveInFlight = false;
       if(saveQueued){
         saveStatus.textContent='Сохраняю свежие изменения…';
         setTimeout(processSaveQueue,250);
         return;
       }
-      saveStatus.textContent = saved ? 'Сохранено в таблицу' : 'Не получилось сохранить. Попробую ещё раз…';
-      if(!saved){
-        saveQueued = true;
-        setTimeout(processSaveQueue,1800);
-      }
+      saveStatus.textContent = 'Отправлено в таблицу';
     }
 
     async function loadRemote(nick, local){
